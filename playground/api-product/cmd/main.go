@@ -14,8 +14,16 @@ import (
 )
 
 func main() {
-	// Carrega variáveis do .env (na raiz do projeto)
-	if err := godotenv.Load(".env"); err != nil {
+	// Carrega variáveis do .env (tenta carregar de múltiplos locais)
+	paths := []string{".env", "../.env"}
+	loaded := false
+	for _, path := range paths {
+		if err := godotenv.Load(path); err == nil {
+			loaded = true
+			break
+		}
+	}
+	if !loaded {
 		log.Println("Aviso: não foi possível carregar .env, usando variáveis de ambiente do sistema")
 	}
 
